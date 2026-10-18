@@ -1,0 +1,26 @@
+
+# Visual Studio generated files
+.vs/
+*.user
+*.suo
+*.VC.db
+*.VC.opendb
+*.ipch
+
+# Build output
+build/
+out/
+Debug/
+Release/
+x64/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+
+# Compiled binaries and intermediate files
+*.obj
+*.o
+*.pdb
+*.ilk
+*.exe
