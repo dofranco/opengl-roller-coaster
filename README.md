@@ -4,6 +4,9 @@
 
 A 3D roller coaster simulation developed in C++ using OpenGL, featuring procedural track generation, Catmull-Rom spline interpolation, shader-based rendering, and an animated first-person camera.
 
+## Demo Video
+
+[▶ Watch the Roller Coaster Simulation on YouTube](https://youtu.be/J3221GacOmI)
 
 
 ## Overview
