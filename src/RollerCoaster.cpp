@@ -134,7 +134,7 @@ float z_coord = -1.0f;
 
 int curr_spline_pos = 0;
 
-int velocity = 1;
+int velocity = 10;
 
 void setTextureUnit(GLint unit);
 

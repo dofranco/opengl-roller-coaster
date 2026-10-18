@@ -80,6 +80,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /Y "$(ProjectDir)..\external\freeglut-3.0.0-win32\bin\$(Configuration)\freeglutd.dll" "$(TargetDir)"
+copy /Y "$(ProjectDir)..\external\glew-1.13.0\bin\$(Configuration)\Win32\glew32d.dll" "$(TargetDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
