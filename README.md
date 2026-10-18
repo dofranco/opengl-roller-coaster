@@ -1,4 +1,4 @@
-\# OpenGL Roller Coaster Simulation
+# OpenGL Roller Coaster Simulation
 
 
 
@@ -6,7 +6,7 @@ A 3D roller coaster simulation developed in C++ using OpenGL, featuring procedur
 
 
 
-\## Overview
+## Overview
 
 
 
@@ -18,37 +18,37 @@ An animated camera travels along the track, providing a first-person perspective
 
 
 
-\## Features
+## Features
 
 
 
-\- \*\*Catmull-Rom Splines:\*\* Smooth curve interpolation to define the roller coaster's path.
+- **Catmull-Rom Splines:** Smooth curve interpolation to define the roller coaster's path.
 
-\- \*\*Procedural Track Generation:\*\* Construction of 3D track geometry from spline data.
+- **Procedural Track Generation:** Construction of 3D track geometry from spline data.
 
-\- \*\*Camera Animation:\*\* Continuous movement and orientation along the roller coaster path.
+- **Camera Animation:** Continuous movement and orientation along the roller coaster path.
 
-\- \*\*OpenGL Rendering:\*\* Shader-based rendering with texture mapping and Phong shading.
+- **OpenGL Rendering:** Shader-based rendering with texture mapping and Phong shading.
 
-\- \*\*Animation Capture:\*\* Screenshot generation for recording the simulation.
-
-
-
-\## Technologies
+- **Animation Capture:** Screenshot generation for recording the simulation.
 
 
 
-\- C++
-
-\- OpenGL
-
-\- GLSL
-
-\- Catmull-Rom spline interpolation
+## Technologies
 
 
 
-\## Screenshots
+- C++
+
+- OpenGL
+
+- GLSL
+
+- Catmull-Rom spline interpolation
+
+
+
+## Screenshots
 
 
 
@@ -68,25 +68,25 @@ An animated camera travels along the track, providing a first-person perspective
 
 
 
-\## Building and Running
+## Building and Running
 
 
 
-\### Requirements
+### Requirements
 
 
 
-\- Windows
+- Windows
 
-\- Visual Studio 2022 with the \*\*Desktop development with C++\*\* workload
+- Visual Studio 2022 with the **Desktop development with C++** workload
 
-\- OpenGL-compatible graphics hardware and drivers
+- OpenGL-compatible graphics hardware and drivers
 
-\- Project dependencies included in the repository (see `external/`)
+- Project dependencies included in the repository (see `external/`)
 
 
 
-\### Build Instructions
+### Build Instructions
 
 
 
@@ -106,15 +106,15 @@ An animated camera travels along the track, providing a first-person perspective
 
 
 
-3\. Select the \*\*Debug\*\* configuration and \*\*Win32\*\* platform.
+3\. Select the **Debug** configuration and **Win32** platform.
 
 
 
-4\. Build the solution using \*\*Build → Build Solution\*\* (`Ctrl + Shift + B`).
+4\. Build the solution using **Build → Build Solution** (`Ctrl + Shift + B`).
 
 
 
-\### Running the Simulation
+### Running the Simulation
 
 
 
@@ -122,11 +122,11 @@ The application requires a track definition file as a command-line argument.
 
 
 
-1\. In Solution Explorer, right-click the \*\*RollerCoaster\*\* project and select \*\*Properties\*\*.
+1\. In Solution Explorer, right-click the **RollerCoaster** project and select **Properties**.
 
 
 
-2\. Navigate to \*\*Configuration Properties → Debugging\*\*.
+2\. Navigate to **Configuration Properties → Debugging**.
 
 
 
@@ -134,17 +134,17 @@ The application requires a track definition file as a command-line argument.
 
 
 
-&#x20;  - \*\*Command Arguments:\*\* `track.txt`
+&#x20;  - **Command Arguments:** `track.txt`
 
-&#x20;  - \*\*Working Directory:\*\* `$(ProjectDir)`
-
-
-
-4\. Click \*\*Apply\*\*, then \*\*OK\*\*.
+&#x20;  - **Working Directory:** `$(ProjectDir)`
 
 
 
-5\. Press \*\*F5\*\* or select \*\*Local Windows Debugger\*\* to launch the simulation.
+4\. Click **Apply**, then **OK**.
+
+
+
+5\. Press **F5** or select **Local Windows Debugger** to launch the simulation.
 
 
 
@@ -152,7 +152,7 @@ The program loads the specified track file and renders the roller coaster simula
 
 
 
-\### Custom Tracks
+### Custom Tracks
 
 
 
@@ -176,7 +176,7 @@ Paths are resolved relative to the configured working directory.
 
 
 
-\### Controls
+### Controls
 
 
 
@@ -188,15 +188,15 @@ Paths are resolved relative to the configured working directory.
 
 
 
-\### Screenshot Capture
+### Screenshot Capture
 
 
 
-Press \*\*X\*\* while the simulation is running to capture the current rendered frame. Screenshots are automatically saved to the `src/Screenshots/` directory.
+Press **X** while the simulation is running to capture the current rendered frame. Screenshots are automatically saved to the `src/Screenshots/` directory.
 
 
 
-\## Project Background
+## Project Background
 
 
 
@@ -212,7 +212,7 @@ This repository presents a maintained portfolio version of the original project.
 
 
 
-\## Author
+## Author
 
 
 
