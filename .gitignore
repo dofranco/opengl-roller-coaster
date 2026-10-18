@@ -7,12 +7,13 @@
 *.VC.opendb
 *.ipch
 
-# Build output
-build/
-out/
-Debug/
-Release/
-x64/
+# Project build output
+/build/
+/out/
+/src/Debug/
+/src/Release/
+/src/x64/
+/src/Bin/
 
 # CMake generated files
 CMakeFiles/
@@ -24,3 +25,6 @@ CMakeCache.txt
 *.pdb
 *.ilk
 *.exe
+
+# Runtime-generated screenshots
+/src/Screenshots/
