@@ -125,8 +125,8 @@ Spline * splines;
 int numSplines;
 
 //Catmull-Rom Spline constants
-float u_step = 0.001;
-float s = 0.5;
+float u_step = 0.001f;
+float s = 0.5f;
 
 //positions of the texture
 float x_y_coord = 50.0f;
@@ -145,7 +145,10 @@ clock_t start, stop, increment, mid;
 
 int loadSplines(char * argv) 
 {
-  char * cName = (char *) malloc(128 * sizeof(char));
+  //char * cName = (char *) malloc(128 * sizeof(char));
+  // Improvment. Now the buffer exists automatically for the duration of the function
+  // it is not necessary to call free(cName)
+  char cName[128] = {};
   FILE * fileList;
   FILE * fileSpline;
   int iType, i = 0, j, iLength;
@@ -154,46 +157,116 @@ int loadSplines(char * argv)
   fileList = fopen(argv, "r");
   if (fileList == NULL) 
   {
-    printf ("can't open file\n");
+    fprintf(stderr, "Error: Cannot open track file: %s\n", argv);
     exit(1);
   }
   
   // stores the number of splines in a global variable 
-  fscanf(fileList, "%d", &numSplines);
+  // fscanf(fileList, "%d", &numSplines);
+      // This handles missing, malformed, and nonpositive spline counts.
+  if (fscanf(fileList, "%d", &numSplines) != 1 || numSplines <= 0)
+  {
+      fprintf(stderr, "Error: Invalid number of splines.\n");
+      fclose(fileList);
+      return 1;
+  }
+
 
   splines = (Spline*) malloc(numSplines * sizeof(Spline));
+
+  if (splines == nullptr)
+  {
+      fprintf(stderr, "Error: Failed to allocate spline array.\n");
+      fclose(fileList);
+      return 1;
+  }
 
   // reads through the spline files 
   for (j = 0; j < numSplines; j++) 
   {
     i = 0;
-    fscanf(fileList, "%s", cName);
+    // Return value ignored here. Use improved version.
+    // fscanf(fileList, "%s", cName); 
+    // 
+      //The %127s limits the input to 127 characters plus the null terminator.
+    if (fscanf(fileList, "%127s", cName) != 1)
+    {
+        fprintf(stderr, "Error: Could not read spline filename.\n");
+        fclose(fileList);
+        return 1;
+    }
+
     fileSpline = fopen(cName, "r");
 
     if (fileSpline == NULL) 
     {
-      printf ("can't open file\n");
+      fprintf(stderr, "Error: Cannot open spline file: %s\n", cName);
       exit(1);
     }
 
     // gets length for spline file
-    fscanf(fileSpline, "%d %d", &iLength, &iType);
+    //fscanf(fileSpline, "%d %d", &iLength, &iType);
+
+    // fixed scanning
+    if (fscanf(fileSpline, "%d %d", &iLength, &iType) != 2 || iLength <= 0)
+    {
+        fprintf(stderr, "Error: Invalid spline header in %s.\n", cName);
+        fclose(fileSpline);
+        fclose(fileList);
+        return 1;
+    }
+
 
     // allocate memory for all the points
     splines[j].points = (Point *)malloc(iLength * sizeof(Point));
+
+    // addresses the potential null pointer dereference.
+    if (splines[j].points == nullptr)
+    {
+        fprintf(stderr, "Error: Failed to allocate points for %s.\n", cName);
+        fclose(fileSpline);
+        fclose(fileList);
+        return 1;
+    }
+
     splines[j].numControlPoints = iLength;
 
-    // saves the data to the struct
-    while (fscanf(fileSpline, "%lf %lf %lf", 
-	   &splines[j].points[i].x, 
-	   &splines[j].points[i].y, 
-	   &splines[j].points[i].z) != EOF) 
+    //// saves the data to the struct
+    //while (fscanf(fileSpline, "%lf %lf %lf", 
+	   //&splines[j].points[i].x, 
+	   //&splines[j].points[i].y, 
+	   //&splines[j].points[i].z) != EOF) 
+    //{
+    //  i++;
+    //}
+
+
+    // Read exactly the number of control points specified by the spline file
+    //This improves code in three ways :
+    // Memory safety : The loop never accesses an index greater than or equal to iLength.
+    // Input validation : It verifies that each control point contains three valid coordinates.
+    // Error reporting : It identifies which control point failed to load.
+    for (int i = 0; i < iLength; i++)
     {
-      i++;
+        if (fscanf(fileSpline, "%lf %lf %lf",
+            &splines[j].points[i].x,
+            &splines[j].points[i].y,
+            &splines[j].points[i].z) != 3)
+        {
+            fprintf(stderr,
+                "Error: Invalid control point %d in spline file %s.\n",
+                i, cName);
+
+            fclose(fileSpline);
+            fclose(fileList);
+            return 1;
+        }
     }
+    fclose(fileSpline);
   }
 
-  free(cName);
+  fclose(fileList);
+  //free(cName);
 
   return 0;
 }
