@@ -53,18 +53,10 @@ An animated camera travels along the track, providing a first-person perspective
 
 ## Screenshots
 
-
-
-![Roller Coaster Overview](src/Screenshots/156.jpg)
-
-
-
 ![Roller Coaster Loops](src/Screenshots/350.jpg)
 
 
-
 ![Roller Coaster Star](src/Screenshots/001.jpg)
-
 
 
 ![Roller Coaster Down](src/Screenshots/382.jpg)
