@@ -17,6 +17,10 @@
 
 #include <time.h>
 
+#include <chrono>
+#include <iomanip>
+#include <sstream>
+
 #if defined(WIN32) || defined(_WIN32)
   #ifdef _DEBUG
     #pragma comment(lib, "glew32d.lib")
@@ -132,7 +136,7 @@ float s = 0.5f;
 float x_y_coord = 50.0f;
 float z_coord = -1.0f;
 
-int curr_spline_pos = 0;
+size_t curr_spline_pos = 0;
 
 int velocity = 10;
 
@@ -142,6 +146,10 @@ bool going_forward = true;
 bool take_screenshots = false;
 
 clock_t start, stop, increment, mid;
+
+using Clock = std::chrono::steady_clock;
+
+Clock::time_point lastScreenshotTime = Clock::now();
 
 int loadSplines(char * argv) 
 {
@@ -507,7 +515,7 @@ void setTextureUnit(GLint unit)
 
 void idleFunc()
 {
-  // do some stuff... 
+  // Calculate position
     curr_spline_pos += velocity;
 
     if ((curr_spline_pos >= positions.size() - 50) && going_forward) 
@@ -522,39 +530,65 @@ void idleFunc()
         going_forward = true;
     }
 
-  // for example, here, you can save the screenshots to disk (to make the animation)
-    increment += (clock() - mid);
+    // for example, here, you can save the screenshots to disk (to make the animation)
+    // increment += (clock() - mid);
 
-    mid = clock();
+    // mid = clock();
 
     if (take_screenshots)
     {
-        if (increment >= 0.15f)
-        {
-            increment = 0.0f;
+        const auto now = Clock::now();
 
-            // take a screenshot
-            if (screenshot_count < 10)
-            {
-                saveScreenshot((screenshots_path + "00" + to_string(screenshot_count) + ".jpg").c_str());
-            }
-            else if (screenshot_count >= 10 && screenshot_count < 100)
-            {
-                saveScreenshot((screenshots_path + "0" + to_string(screenshot_count) + ".jpg").c_str());
-            }
-            else
-            {
-                saveScreenshot((screenshots_path + to_string(screenshot_count) + ".jpg").c_str());
-            }
+        const float elapsedSeconds =
+            std::chrono::duration<float>(
+                now - lastScreenshotTime
+            ).count();
+
+        if (elapsedSeconds >= 0.15f)
+        {
+            lastScreenshotTime = now;
+
+            std::ostringstream filename;
+            filename << screenshots_path
+                << std::setfill('0')
+                << std::setw(3)
+                << screenshot_count
+                << ".jpg";
+
+            saveScreenshot(filename.str().c_str());
 
             screenshot_count++;
         }
     }
 
-  // this is also necessary to be added to the end of idleFunc()
+    // this is also necessary to be added to the end of idleFunc()
 
-  // make the screen update 
-  glutPostRedisplay();
+    // make the screen update 
+    glutPostRedisplay();
+    //if (take_screenshots)
+    //{
+    //    if (increment >= 0.15f)
+    //    {
+    //        increment = 0.0f;
+
+    //        // take a screenshot
+    //        if (screenshot_count < 10)
+    //        {
+    //            saveScreenshot((screenshots_path + "00" + to_string(screenshot_count) + ".jpg").c_str());
+    //        }
+    //        else if (screenshot_count >= 10 && screenshot_count < 100)
+    //        {
+    //            saveScreenshot((screenshots_path + "0" + to_string(screenshot_count) + ".jpg").c_str());
+    //        }
+    //        else
+    //        {
+    //            saveScreenshot((screenshots_path + to_string(screenshot_count) + ".jpg").c_str());
+    //        }
+
+    //        screenshot_count++;
+    //    }
+    //}
+
 }
 
 void reshapeFunc(int w, int h)
@@ -811,20 +845,20 @@ void initScene(int argc, char* argv[])
 
             for (float u = 0.0; u <= 1.0; u += u_step) {
 
-                glm::vec4 param = { 0.0f, 0.0f, u , 1.0f };
+                glm::vec4 param = { 0.0, 0.0, u , 1.0 };
 
                 //CALCULATING POSITIONS OF THE SPLINE
                 //create the parameter vector
-                param.x = pow(u, 3);
-                param.y = pow(u, 2);
+                param.x = static_cast<float>(pow(u, 3));
+                param.y = static_cast<float>(pow(u, 2));
 
                 positions.push_back(param * (basis * control));
 
                 //TANGENT VECTOR SECTION
                 //calculating the tangent vector
-                glm::vec4 tangent = { 0.0f, 0.0f, 1.0f, 0.0f };
+                glm::vec4 tangent = { 0.0, 0.0, 1.0, 0.0 };
 
-                tangent.x = 3 * pow(u, 2);
+                tangent.x = 3 * static_cast<float>(pow(u, 2));
                 tangent.y = 2 * u;
 
                 glm::vec3 tanToPush = glm::normalize(tangent * (basis * control));
@@ -835,7 +869,7 @@ void initScene(int argc, char* argv[])
        }
 
      //building the spline positions from given positions
-       for (int i = 0; i < positions.size(); ++i)
+       for (size_t i = 0; i < positions.size(); ++i)
        {
            spline_positions.push_back(positions[i]);
            //not the first or the last posittion, add same position again
@@ -858,12 +892,12 @@ void initScene(int argc, char* argv[])
        spline_binormals.push_back(glm::normalize(glm::cross(spline_tangents[0], spline_normals[0])));
 
        //loop through to the the remaining tangents
-       for (int i = 1; i < spline_tangents.size(); i++) {
+       for (size_t i = 1; i < spline_tangents.size(); i++) {
            spline_normals.push_back(glm::normalize(glm::cross(spline_binormals[i - 1], spline_tangents[i])));
            spline_binormals.push_back(glm::normalize(glm::cross(spline_tangents[i], spline_normals[i])));
        }
        
-       for (int i = 0; i < spline_tangents.size(); i++) {
+       for (size_t i = 0; i < spline_tangents.size(); i++) {
            glm::vec3 position_0 = positions[i];
            glm::vec3 n_0 = spline_normals[i];
            glm::vec3 b_0 = spline_binormals[i];
